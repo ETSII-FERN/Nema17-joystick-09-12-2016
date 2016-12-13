@@ -1,54 +1,24 @@
-#define VELOCIDAD 5000
-int steps = 2;
-int direccion = 3;
-int reset = 9;
-int pasos = 200;
-int vol_x = A0;
-int vol_y = A1;
-int xpos = 0;
-int ypos = 0;
+
+ 
+#include <Stepper.h> //Importamos la librería para controlar motores paso a paso
+ 
+#define STEPS 200 //Ponemos el número de pasos que necesita para dar una vuelta. 200 en nuestro caso
+ 
+
+ 
 void setup()
 {
-  pinMode(vol_x,INPUT);
-  pinMode(vol_y,INPUT);
-  pinMode(steps, OUTPUT); 
-  pinMode(direccion, OUTPUT); 
-  pinMode(reset, OUTPUT);
-  Serial.begin(9600);
+  // Velocidad del motor en RPM
+  stepper.setSpeed(100);
 }
+ 
 void loop()
 {
-  xpos = analogRead(vol_x);
-  ypos = analogRead(vol_y);
-
-  if(ypos > 600)
-  {
-      digitalWrite(reset, LOW);
-      delay(100);
-      digitalWrite(reset, HIGH);
-      digitalWrite(direccion, HIGH);
-      while(ypos > 600)
-      {
-        ypos = analogRead(vol_y);
-        Serial.println(ypos);
-        digitalWrite(steps, HIGH);
-        digitalWrite(steps, LOW);
-        delayMicroseconds(VELOCIDAD);
-        Serial.println("hola");
-      }
-  }
-  else if(ypos < 400)
-  {
-      digitalWrite(reset, LOW);
-      delay(100);
-      digitalWrite(reset, HIGH);
-      digitalWrite(direccion, LOW);
-      while(ypos < 400)
-      {
-        ypos = analogRead(vol_y);
-        digitalWrite(steps, HIGH);
-        digitalWrite(steps, LOW);
-        delayMicroseconds(VELOCIDAD);
-      }
-  }
+  //Girar una vuelta entera en un sentido
+  stepper.step(200);
+  delay(500); //Pequeña pausa
+ 
+  //Girar una vuelta entera en sentido contrario
+  stepper.step(-200);
+  delay(500); //Pequeña pausa
 }
